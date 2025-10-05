@@ -117,7 +117,7 @@ class QuizViewSet(viewsets.ModelViewSet):
         """
         Set permissions based on action
         """
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+        if self.action in ['create', 'update', 'partial_update', 'destroy','retrieve']:
             return [IsAuthenticated()]
         elif self.action in ['take', 'submit']:
             return [AllowAny()] 

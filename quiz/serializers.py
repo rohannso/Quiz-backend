@@ -69,6 +69,7 @@ class QuizSerializer(serializers.ModelSerializer):
         }
     )
     
+    
     class Meta:
         model = Quiz
         fields = ['id', 'title', 'created_at']
@@ -109,13 +110,6 @@ class QuizSerializer(serializers.ModelSerializer):
         """
         return data
     
-class QuizDetailSerializer(serializers.ModelSerializer):
-    questions_count = serializers.IntegerField(source='questions.count', read_only=True)
-    
-    class Meta:
-        model = Quiz
-        fields = ['id', 'title', 'created_at', 'questions_count',]
-        read_only_fields = ['id', 'created_at', 'questions_count']
 
 class OptionSerializer(serializers.ModelSerializer):
     text = serializers.CharField(
@@ -300,3 +294,12 @@ class AnswerSubmissionSerializer(serializers.Serializer):
                 raise serializers.ValidationError("question_id and option_id must be integers.")
         
         return value
+    
+class QuizDetailSerializer(serializers.ModelSerializer):
+    questions_count = serializers.IntegerField(source='questions.count', read_only=True)
+    questions = QuestionDetailSerializer(many=True, read_only=True)  # ← FIXED: lowercase
+    
+    class Meta:
+        model = Quiz
+        fields = ['id', 'title', 'created_at', 'questions_count', 'questions']
+        read_only_fields = ['id', 'created_at']
